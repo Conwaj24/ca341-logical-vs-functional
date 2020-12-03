@@ -25,18 +25,6 @@ node *addNodeToTree(node *n, node *tree) {
 	return tree;
 }
 
-node *addToTree(int item, node *root) {
-	node *n = newNode(item); 
-	return addNodeToTree(n, root);
-}
-
-node *findNode(int number, node *tree) {
-	node *n = searchTreeForNumber(number, tree);
-	if (n->data != number)
-		n = NULL;
-	return n;
-}
-
 node *removeRoot(node *root) {
 	if (root->left)
 		return addNodeToTree(root->right, root->left);
