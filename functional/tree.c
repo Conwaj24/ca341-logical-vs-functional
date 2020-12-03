@@ -1,18 +1,4 @@
-#include <stdlib.h>
-
-typedef struct node {
-	struct node *left;
-	struct node *right;
-	int data;
-} node;
-
-node *newNode(int data) {
-	node *out = malloc(sizeof(node));
-	out->data = data;
-	out->left = NULL;
-	out->right = NULL;
-	return out;
-}
+#include "core.c"
 
 node *searchTreeForNumber(int number, node *root) {
 	if (root->left && number < root->data)
@@ -44,8 +30,8 @@ node *addToTree(int item, node *root) {
 	return addNodeToTree(n, root);
 }
 
-node *findNode(node *root, int number) {
-	node *n = searchTreeForNumber(number, root);
+node *findNode(int number, node *tree) {
+	node *n = searchTreeForNumber(number, tree);
 	if (n->data != number)
 		n = NULL;
 	return n;
@@ -61,6 +47,8 @@ node *removeRoot(node *root) {
 }
 
 node *removeNodeFromTree(node* n, node* tree) {
+	if (!n)
+		return tree;
 	if (n == tree)
 		return removeRoot(n);
 
@@ -68,11 +56,3 @@ node *removeNodeFromTree(node* n, node* tree) {
 	addNodeToTree(n->right, tree);
 	return tree;
 }
-
-node *removeFromTree(int key, node *tree) {
-	node *n = findNode(tree, key);
-	if (n != NULL) 
-		return removeNodeFromTree(n, tree);
-	return tree;
-}
-
