@@ -1,144 +1,78 @@
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
-
-#define NOTNULL(n) if(!n) {return;}
-
-typedef struct {
-	char *name;
-	char *address;
-	int number;
-} phonebookEntry;
 
 typedef struct node {
-	struct node *parent;
 	struct node *left;
 	struct node *right;
-	phonebookEntry *data;
+	int data;
 } node;
 
-node *root;
-
-phonebookEntry *newPhonebookEntry(char *name, char *address, int number) {
-	phonebookEntry *out = malloc(sizeof(phonebookEntry));
-	out->name = strdup(name);
-	out->address = strdup(address);
-	out->number = number;
-	return out;
-}
-
-void freePhonebookEntry(phonebookEntry *pbe) {
-	free(pbe->name);
-	free(pbe->address);
-	free(pbe);
-}
-
-node *newNode(phonebookEntry *data) {
+node *newNode(int data) {
 	node *out = malloc(sizeof(node));
 	out->data = data;
 	out->left = NULL;
 	out->right = NULL;
-	out->parent = NULL;
 	return out;
 }
 
-void freeNode(node *n) {
-	NOTNULL(n)
-	freePhonebookEntry(n->data);
-	free(n);
-}
-
-void freeTree(node *n) {
-	NOTNULL(n)
-	freeTree(n->left);
-	freeTree(n->right);
-	freeNode(n);
-}
-
-void displaypbe(phonebookEntry *pbe){
-	fprintf(stdout, "%s\n%s\n%i\n", pbe->name, pbe->address, pbe->number);
-}
-
-void display(node *n){
-	if (n)
-		displaypbe(n->data);
-	else
-		printf("NULL\n");
-	printf("");
-}
-
 node *searchTreeForNumber(int number, node *root) {
-	if (root->left && number < root->data->number)
+	if (root->left && number < root->data)
 		return searchTreeForNumber(number, root->left);
-	if (root->right && number > root->data->number)
+	if (root->right && number > root->data)
 		return searchTreeForNumber(number, root->right);
 	return root;
 }
 
-void addNodeToTree(node *n) {
-	NOTNULL(n)
-	node *parent = searchTreeForNumber(n->data->number, root);
-	n->parent = parent;
-	if (n->data->number < parent->data->number) {
-		node *orphan = parent->left;
-		parent->left = n;
-		addNodeToTree(orphan);
+node *addNodeToTree(node *n, node *tree) {
+	if(!n) {return tree;}
+
+	if (n->data < tree->data) {
+		if (tree->left)
+			addNodeToTree(n, tree->left);
+		else
+			tree->left = n;
 	} else {
-		node *orphan = parent->right;
-		parent->right = n;
-		addNodeToTree(orphan);
+		if (tree->right)
+			addNodeToTree(n, tree->right);
+		else
+			tree->right = n;
 	}
+	return tree;
 }
 
-void addToTree(phonebookEntry *item) {
+node *addToTree(int item, node *root) {
 	node *n = newNode(item); 
-	addNodeToTree(n);
+	return addNodeToTree(n, root);
 }
 
 node *findNode(node *root, int number) {
 	node *n = searchTreeForNumber(number, root);
-	if (n->data->number != number)
+	if (n->data != number)
 		n = NULL;
 	return n;
 }
 
-void kidnap(node *n) {
-	//remove node from its parent
-	NOTNULL(n->parent)
-	if (n->parent->left == n)
-		n->parent->left = NULL;
+node *removeRoot(node *root) {
+	if (root->left)
+		return addNodeToTree(root->right, root->left);
+	else if (root->right)
+		return root->right;
 	else
-		n->parent->right = NULL;
+		return NULL;
 }
 
-void setAsRoot(node *n) {
-	root = n;
-	n->parent=NULL;
+node *removeNodeFromTree(node* n, node* tree) {
+	if (n == tree)
+		return removeRoot(n);
+
+	addNodeToTree(n->left, tree);
+	addNodeToTree(n->right, tree);
+	return tree;
 }
 
-void removeNodeFromTree(node* n) {
-	kidnap(n);
-	if (n == root) {
-		if (n->left) {
-			setAsRoot(n->left);
-			addNodeToTree(n->right);
-		} else if (n->right)
-			setAsRoot(n->right);
-		else {
-			root = NULL;
-			printf("Warning! Tree is empty", stderr);
-		}
-	} else {
-		addNodeToTree(n->left);
-		addNodeToTree(n->right);
-	}
-	freeNode(n);
-}
-
-void removeFromTree(int key) {
-	node *n = findNode(root, key);
+node *removeFromTree(int key, node *tree) {
+	node *n = findNode(tree, key);
 	if (n != NULL) 
-		removeNodeFromTree(n);
+		return removeNodeFromTree(n, tree);
+	return tree;
 }
 
