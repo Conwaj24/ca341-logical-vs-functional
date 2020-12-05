@@ -8,19 +8,29 @@ node *searchTreeForNumber(int number, node *root) {
 	return root;
 }
 
+node *addNodeToTree(node *n, node *tree);
+
+node *addLeft(node *n, node *tree) {
+	if (tree->left)
+		return addNodeToTree(n, tree->left);
+	else
+		return fork(tree, n, tree->right);
+}
+
+node *addRight(node *n, node *tree) {
+	if (tree->right)
+		return addNodeToTree(n, tree->right);
+	else
+		return fork(tree, tree->left, n);
+}
+
 node *addNodeToTree(node *n, node *tree) {
 	if(!n) {return tree;}
 
 	if (n->data < tree->data) {
-		if (tree->left)
-			addNodeToTree(n, tree->left);
-		else
-			tree->left = n;
+		return addLeft(n, tree);
 	} else {
-		if (tree->right)
-			addNodeToTree(n, tree->right);
-		else
-			tree->right = n;
+		return addRight(n, tree);
 	}
 	return tree;
 }

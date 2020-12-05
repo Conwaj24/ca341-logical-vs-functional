@@ -12,5 +12,7 @@ node *inorder(node *tree);
 node *postorder(node *tree);
 
 node *remove(int key, node *tree) {
-	return removeNodeFromTree(findNode(key, tree), tree);
+	if (!search(key, tree))
+		return tree;
+	return removeNodeFromTree(searchTreeForNumber(key, tree), tree);
 }
