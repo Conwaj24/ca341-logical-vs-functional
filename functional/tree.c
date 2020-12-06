@@ -12,14 +12,14 @@ node *addNodeToTree(node *n, node *tree);
 
 node *addLeft(node *n, node *tree) {
 	if (tree->left)
-		return addNodeToTree(n, tree->left);
+		return fork( tree, addNodeToTree(n, tree->left), tree->right);
 	else
 		return fork(tree, n, tree->right);
 }
 
 node *addRight(node *n, node *tree) {
 	if (tree->right)
-		return addNodeToTree(n, tree->right);
+		return fork( tree, tree->left, addNodeToTree(n, tree->right));
 	else
 		return fork(tree, tree->left, n);
 }
