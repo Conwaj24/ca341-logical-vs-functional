@@ -1,7 +1,3 @@
-childOf(6, 10).
-childOf(18, 10).
-childOf(5, 10).
-
 leftOf(C, P) :-
 	childOf(C, P),
 	C < P.
