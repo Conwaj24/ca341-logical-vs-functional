@@ -25,13 +25,12 @@ node *addRight(node *n, node *tree) {
 }
 
 node *addNodeToTree(node *n, node *tree) {
-	if(!n) {return tree;}
-
-	if (n->data < tree->data) {
+	if(!n)
+		return tree;
+	if (n->data < tree->data)
 		return addLeft(n, tree);
-	} else {
+	else
 		return addRight(n, tree);
-	}
 	return tree;
 }
 
