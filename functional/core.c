@@ -75,7 +75,7 @@ list *concatList(list *l0, list *l1) {
 		return l1;
 	if (!l1)
 		return l0;
-	endofList(l0)->next = l1;
+	endofList(l0)->next = l1; //I could use another fork method here but lists aren't essential and I think you get the idea
 	return l0;
 }
 
