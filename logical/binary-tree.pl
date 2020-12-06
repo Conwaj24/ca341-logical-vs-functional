@@ -57,9 +57,43 @@ insert(X, T, R) :-
 	rightOf(X, R),
 	binaryTree(R).
 
-search(X, X) :- !
+search(X, X) :- !.
 search(X, T) :-
 	childOf(X, T).
 search(X, T) :-
 	childOf(C, T),
 	search(X, C).
+
+preorder(T, (T, L, R)) :-
+	(
+		leftOf(T, Left),
+		preorder(Left, L)
+	) ;
+		L is nil,
+	(
+		rightOf(T, Right),
+		preorder(Right, R)
+	) ;
+		R is nil.
+postorder(T, (L, R, T)) :-
+	(
+		leftOf(T, Left),
+		postorder(Left, L)
+	) ;
+		L is nil,
+	(
+		rightOf(T, Right),
+		postorder(Right, R)
+	) ;
+		R is nil.
+inorder(T, (L, T, R)) :-
+	(
+		leftOf(T, Left),
+		inorder(Left, L)
+	) ;
+		L is nil,
+	(
+		rightOf(T, Right),
+		inorder(Right, R)
+	) ;
+		R is nil.
