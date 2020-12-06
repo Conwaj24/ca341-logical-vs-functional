@@ -33,14 +33,26 @@ node *copy(node *n) {
 	return fork(n, n->left, n->right);
 }
 
-node *replace(node *old, node *new);
+node *replace(node *old, node *new) {
+	if (!new) {
+		freeTree(old);
+		return new;
+	} if (old != new) {
+		replace(old->left, new->left);
+		replace(old->right, new->right);
+	}
+	free(old);
+	return new;
+}
 
 typedef struct list {
 	struct list *next;
-	int data;
+	node *data;
 } list;
 
-list *newList(int data) {
+list *newList(node *data) {
+	if (!data)
+		return NULL;
 	list *out = malloc(sizeof(list));
 	out->data = data;
 	out->next = NULL;
@@ -53,8 +65,24 @@ void freeList(list *l) {
 	free(l);
 }
 
+list *endofList(list *l) {
+	for (;l->next;l=l->next) {}
+	return l;
+}
+
+list *concatList(list *l0, list *l1) {
+	if (!l0)
+		return l1;
+	if (!l1)
+		return l0;
+	endofList(l0)->next = l1;
+	return l0;
+}
+
 int listLen(list *l) {
 	if (!(l->next))
 		return 1;
 	return 1 + listLen(l->next);
 }
+
+
