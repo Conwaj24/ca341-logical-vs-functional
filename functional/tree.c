@@ -13,15 +13,13 @@ node *addNodeToTree(node *n, node *tree);
 node *addLeft(node *n, node *tree) {
 	if (tree->left)
 		return fork( tree, addNodeToTree(n, tree->left), tree->right);
-	else
-		return fork(tree, n, tree->right);
+	return fork(tree, n, tree->right);
 }
 
 node *addRight(node *n, node *tree) {
 	if (tree->right)
 		return fork( tree, tree->left, addNodeToTree(n, tree->right));
-	else
-		return fork(tree, tree->left, n);
+	return fork(tree, tree->left, n);
 }
 
 node *addNodeToTree(node *n, node *tree) {
@@ -29,9 +27,7 @@ node *addNodeToTree(node *n, node *tree) {
 		return tree;
 	if (n->data < tree->data)
 		return addLeft(n, tree);
-	else
-		return addRight(n, tree);
-	return tree;
+	return addRight(n, tree);
 }
 
 node *removeRoot(node *root) {
@@ -39,8 +35,7 @@ node *removeRoot(node *root) {
 		return addNodeToTree(root->right, root->left);
 	else if (root->right)
 		return root->right;
-	else
-		return NULL;
+	return NULL;
 }
 
 node *removeNodeFromTree(node* n, node* tree) {
